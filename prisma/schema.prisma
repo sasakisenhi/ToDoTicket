@@ -1,0 +1,21 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Task {
+  id      Int      @id @default(autoincrement()) @unique
+  task   String   
+  completed    Boolean
+   parentId    Int?     // 親タスクへのリレーションシップを表す新しいプロパティ
+
+  parentTask  Task?    @relation("ChildTasks", fields: [parentId], references: [id]) // 親タスクとのリレーションシップを定義
+  childTasks  Task[]   @relation("ChildTasks") // 子タスクとのリレーションシップを定義
+}
